@@ -40,3 +40,6 @@ docker-compose.prod.yml
 # 🏗️ Build Frontend (si tu as du Vue.js ou React)
 public/build
 public/hot
+
+# Ne pas ignorer .env.example
+!.env.example

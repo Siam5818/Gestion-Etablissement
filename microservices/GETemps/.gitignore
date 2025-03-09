@@ -1,23 +1,44 @@
-/.phpunit.cache
-/node_modules
-/public/build
-/public/hot
+# 🚀 Ignorer les fichiers Laravel inutiles
+/vendor
 /public/storage
 /storage/*.key
-/storage/pail
-/vendor
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/bootstrap/cache
+.phpunit.result.cache
+.phpunit.cache
+
+# 🛑 Ignorer les fichiers sensibles
 .env
+.env.*
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
+/auth.json
+
+# 🔧 Fichiers de config et IDE
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed
+/.phpactor.json
 Homestead.json
 Homestead.yaml
+
+# 🛠️ Fichiers de debug et logs
 npm-debug.log
 yarn-error.log
-/auth.json
-/.fleet
-/.idea
-/.nova
-/.vscode
-/.zed
+
+# 🐳 Ignorer les fichiers Docker inutiles (ajouté pour ton projet)
+docker-compose.override.yml
+docker-compose.prod.yml
+.Dockerfile
+
+# 🏗️ Build Frontend (si tu as du Vue.js ou React)
+public/build
+public/hot
+
+# Ne pas ignorer .env.example
+!.env.example
