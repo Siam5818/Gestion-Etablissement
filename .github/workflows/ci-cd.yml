@@ -27,6 +27,11 @@ jobs:
           php-version: '8.2'
           tools: composer
 
+      - name: 📂 Créer le dossier de cache si nécessaire
+        run: |
+          mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
+          chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
+
       - name: 📦 Installation des dépendances Laravel
         run: |
           cd microservices/${{ matrix.service }}
