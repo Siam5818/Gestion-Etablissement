@@ -5,6 +5,9 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [GClasses, GCours, GETemps, GEtudiants, GProfs]  # Liste de tes microservices
 
     steps:
     - name: Checkout code
@@ -16,12 +19,27 @@ jobs:
         php-version: '8.2'
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
+      run: |
+        cd microservices/${{ matrix.service }}
+        composer install --prefer-dist --no-progress --no-interaction
 
     - name: Prepare cache directory
       run: |
-        mkdir -p /home/runner/work/GEtudiants/GEtudiants/microservices/GClasses/bootstrap/cache
-        chmod -R 775 /home/runner/work/GEtudiants/GEtudiants/microservices/GClasses/bootstrap/cache
+        mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
+        chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
 
     - name: Run Laravel tests
-      run: php artisan test
+      run: |
+        cd microservices/${{ matrix.service }}
+        php artisan test
+
+    - name: Build Docker image
+      run: docker build -t my-microservice-${{ matrix.service }}:latest .
+      working-directory: ./microservices/${{ matrix.service }}
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+    - name: Push Docker image
+      run: docker push my-microservice-${{ matrix.service }}:latest
+      working-directory: ./microservices/${{ matrix.service }}
