@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 📂 Se déplacer dans le microservice ${{ matrix.service }}
-        run: cd microservices/${{ matrix.service }}
+        run: cd microservices/${{ matrix.service.toLowerCase() }}
 
       - name: 🐘 Installation de PHP et Composer
         uses: shivammathur/setup-php@v2
@@ -29,40 +29,40 @@ jobs:
 
       - name: 📂 Créer les répertoires de cache et de stockage si nécessaire
         run: |
-          mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
-          chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
-          mkdir -p microservices/${{ matrix.service }}/storage/framework/cache/data
-          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/cache
-          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/cache/data
-          mkdir -p microservices/${{ matrix.service }}/storage/framework/sessions
-          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/sessions
-          mkdir -p microservices/${{ matrix.service }}/storage/framework/views
-          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/views
+          mkdir -p bootstrap/cache
+          chmod -R 775 bootstrap/cache
+          mkdir -p storage/framework/cache/data
+          chmod -R 775 storage/framework/cache
+          chmod -R 775 storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          chmod -R 775 storage/framework/sessions
+          mkdir -p storage/framework/views
+          chmod -R 775 storage/framework/views
 
       - name: 📦 Installation des dépendances Laravel
         run: |
-          cd microservices/${{ matrix.service }}
+          cd microservices/${{ matrix.service.toLowerCase() }}
           composer install --no-progress --no-interaction --prefer-dist
 
       - name: 🔧 Préparer l'environnement pour ${{ matrix.service }}
         run: |
-          cd microservices/${{ matrix.service }}
+          cd microservices/${{ matrix.service.toLowerCase() }}
           cp .env.example .env
           php artisan key:generate
           touch database/database.sqlite  # Créer le fichier de base de données SQLite
 
       - name: 🔍 Exécution des tests unitaires pour ${{ matrix.service }}
         run: |
-          cd microservices/${{ matrix.service }}
+          cd microservices/${{ matrix.service.toLowerCase() }}
           php artisan migrate --env=testing --force  # Exécuter les migrations avant les tests
           php artisan test
 
       - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
-        run: docker build -t my-microservice-${{ matrix.service | lower }}:latest .
-        working-directory: ./microservices/${{ matrix.service }}
+        run: docker build -t my-microservice-${{ matrix.service.toLowerCase() }}:latest .
+        working-directory: ./microservices/${{ matrix.service.toLowerCase() }}
 
       - name: 🔑 Connexion à Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: 📤 Pousser l'image Docker pour ${{ matrix.service }}
-        run: docker push my-microservice-${{ matrix.service | lower }}:latest
+        run: docker push my-microservice-${{ matrix.service.toLowerCase() }}:latest
