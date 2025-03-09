@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: getemps-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: getemps
+  template:
+    metadata:
+      labels:
+        app: getemps
+    spec:
+      containers:
+      - name: getemps
+        image: my-dockerhub-username/getemps:latest
+        ports:
+        - containerPort: 8004
+        env:
+        - name: DB_CONNECTION
+          value: "pgsql"
+        - name: DB_HOST
+          value: "postgres-etemps"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_DATABASE
+          value: "getemps"
+        - name: DB_USERNAME
+          value: "postgres"
+        - name: DB_PASSWORD
+          value: "Passer@24"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: getemps-service
+spec:
+  selector:
+    app: getemps
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8004
+  type: ClusterIP

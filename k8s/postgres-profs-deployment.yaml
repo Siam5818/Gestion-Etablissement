@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-profs-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-profs
+  template:
+    metadata:
+      labels:
+        app: postgres-profs
+    spec:
+      containers:
+      - name: postgres-profs
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "gprofs"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_PASSWORD
+          value: "Passer@24"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-profs-service
+spec:
+  selector:
+    app: postgres-profs
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP
