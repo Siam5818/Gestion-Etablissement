@@ -12,11 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [gclasses, gcours, getemps, getudiants, gprofs]  # Noms des microservices en minuscules
+        service: [GClasses, GCours, GETemps, GEtudiants, GProfs]
 
     steps:
       - name: 🛠️ Récupération du code
         uses: actions/checkout@v3
+
+      - name: 📂 Vérification des répertoires
+        run: ls -R
 
       - name: 📂 Se déplacer dans le microservice ${{ matrix.service }}
         run: cd microservices/${{ matrix.service }}
@@ -58,11 +61,11 @@ jobs:
           php artisan test
 
       - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
-        run: docker build -t my-microservice-${{ matrix.service }}:latest .
+        run: docker build -t my-microservice-${{ matrix.service | lower }}:latest .
         working-directory: ./microservices/${{ matrix.service }}
 
       - name: 🔑 Connexion à Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: 📤 Pousser l'image Docker pour ${{ matrix.service }}
-        run: docker push my-microservice-${{ matrix.service }}:latest
+        run: docker push my-microservice-${{ matrix.service | lower }}:latest
