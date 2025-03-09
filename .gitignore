@@ -25,3 +25,6 @@ Homestead.yaml
 /.fleet
 /.nova
 /.zed
+
+# Ne pas ignorer .env.example
+!.env.example
