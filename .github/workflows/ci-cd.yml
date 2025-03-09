@@ -42,10 +42,12 @@ jobs:
           cd microservices/${{ matrix.service }}
           cp .env.example .env
           php artisan key:generate
+          touch database/database.sqlite  # Créer le fichier de base de données SQLite
 
       - name: 🔍 Exécution des tests unitaires pour ${{ matrix.service }}
         run: |
           cd microservices/${{ matrix.service }}
+          php artisan migrate --env=testing --force  # Exécuter les migrations avant les tests
           php artisan test
 
       - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
