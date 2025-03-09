@@ -27,12 +27,17 @@ jobs:
           php-version: '8.2'
           tools: composer
 
-      - name: 📂 Créer le dossier de cache si nécessaire
+      - name: 📂 Créer les répertoires de cache et de stockage si nécessaire
         run: |
-          mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
-          chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
-          mkdir -p microservices/${{ matrix.service }}/storage/framework/cache
-          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/cache
+          mkdir -p bootstrap/cache
+          chmod -R 775 bootstrap/cache
+          mkdir -p storage/framework/cache/data
+          chmod -R 775 storage/framework/cache
+          chmod -R 775 storage/framework/cache/data
+          mkdir -p storage/framework/sessions
+          chmod -R 775 storage/framework/sessions
+          mkdir -p storage/framework/views
+          chmod -R 775 storage/framework/views
 
       - name: 📦 Installation des dépendances Laravel
         run: |
