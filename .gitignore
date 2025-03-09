@@ -1,0 +1,27 @@
+# 🚀 Ignorer les dépendances globales
+vendor/
+node_modules/
+
+# 🛑 Ignorer les fichiers sensibles globaux
+.env
+.env.*
+
+# 🐳 Ignorer les fichiers Docker et GitHub Actions
+docker-compose.override.yml
+docker-compose.prod.yml
+.Dockerfile
+.github/
+
+# 🔥 Ignorer les fichiers de logs et temporaires
+logs/
+storage/
+bootstrap/cache/
+Homestead.json
+Homestead.yaml
+
+# 🛠️ Fichiers spécifiques aux IDE et outils
+/.idea
+/.vscode
+/.fleet
+/.nova
+/.zed

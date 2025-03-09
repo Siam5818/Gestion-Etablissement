@@ -1,0 +1,162 @@
+  services:
+    gclasses:
+      build:
+        context: ./microservices/GClasses
+        dockerfile: Dockerfile
+      container_name: gclasses
+      networks:
+        - my_network
+      ports:
+        - "8002:8002"
+      environment:
+        - DB_CONNECTION=pgsql
+        - DB_HOST=postgres_classes
+        - DB_PORT=5432
+        - DB_DATABASE=gclasses
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=Passer@24
+      platform: linux/amd64
+    
+    gcours:
+      build:
+        context: ./microservices/GCours
+        dockerfile: Dockerfile
+      container_name: gcours
+      networks:
+        - my_network
+      ports:
+        - "8003:8003"
+      environment:
+        - DB_CONNECTION=pgsql
+        - DB_HOST=postgres_cours
+        - DB_PORT=5432
+        - DB_DATABASE=gcours
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=Passer@24
+      platform: linux/amd64
+    getemps:
+      build:
+        context: ./microservices/GETemps
+        dockerfile: Dockerfile
+      container_name: getemps
+      networks:
+        - my_network
+      ports:
+        - "8004:8004"
+      environment:
+        - DB_CONNECTION=pgsql
+        - DB_HOST=postgres_etemps
+        - DB_PORT=5432
+        - DB_DATABASE=getemps
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=Passer@24
+      platform: linux/amd64
+    getudiants:
+      build:
+        context: ./microservices/GEtudiants
+        dockerfile: Dockerfile
+      container_name: getudiants
+      networks:
+        - my_network
+      ports:
+        - "8005:8005"
+      environment:
+        - DB_CONNECTION=pgsql
+        - DB_HOST=postgres_etudiants
+        - DB_PORT=5432
+        - DB_DATABASE=getudiants
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=Passer@24
+      platform: linux/amd64
+    gprofs:
+      build:
+        context: ./microservices/GProfs
+        dockerfile: Dockerfile
+      container_name: gprofs
+      networks:
+        - my_network
+      ports:
+        - "8006:8006"
+      environment:
+        - DB_CONNECTION=pgsql
+        - DB_HOST=postgres_profs
+        - DB_PORT=5432
+        - DB_DATABASE=gprofs
+        - DB_USERNAME=postgres
+        - DB_PASSWORD=Passer@24
+      platform: linux/amd64
+
+
+  #BASE DE DONNEES
+    postgres-gclasses:
+      image: postgres:13
+      container_name: postgres_classes
+      networks:
+        - my_network
+      environment:
+        POSTGRES_DB: gclasses
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Passer@24
+      ports:
+        - "5432:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+    postgres-gcours:
+      image: postgres:13
+      container_name: postgres_cours
+      networks:
+        - my_network
+      environment:
+        POSTGRES_DB: gcours
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Passer@24
+      ports:
+        - "5433:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+    postgres-getemps:
+      image: postgres:13
+      container_name: postgres_etemps
+      networks:
+        - my_network
+      environment:
+        POSTGRES_DB: getemps
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Passer@24
+      ports:
+        - "5434:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+    postgres-getudiants:
+      image: postgres:13
+      container_name: postgres_etudiants
+      networks:
+        - my_network
+      environment:
+        POSTGRES_DB: getudiants
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Passer@24
+      ports:
+        - "5435:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+    postgres-gprofs:
+      image: postgres:13
+      container_name: postgres_profs
+      networks:
+        - my_network
+      environment:
+        POSTGRES_DB: gprofs
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: Passer@24
+      ports:
+        - "5436:5432"
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+  networks:
+    my_network:
+
+  volumes:
+    postgres_data:
