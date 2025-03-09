@@ -10,7 +10,7 @@ node_modules/
 docker-compose.override.yml
 docker-compose.prod.yml
 .Dockerfile
-.github/
+#.github/
 
 # 🔥 Ignorer les fichiers de logs et temporaires
 logs/
