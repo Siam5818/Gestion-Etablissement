@@ -62,7 +62,7 @@ jobs:
 
       - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
         run: |
-          docker build -t my-microservice-${{ matrix.service | toLowerCase }}:latest .
+          docker build -t my-microservice-${{ matrix.service }}:latest .
         working-directory: ./microservices/${{ matrix.service }}
 
       - name: 🔑 Connexion à Docker Hub
