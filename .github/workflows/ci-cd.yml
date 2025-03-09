@@ -61,11 +61,12 @@ jobs:
           php artisan test
 
       - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
-        run: docker build -t my-microservice-${{ github.event_name == 'push' && matrix.service != 'GClasses' ? matrix.service | toLowerCase() : matrix.service }}:latest .
+        run: |
+          docker build -t my-microservice-${{ matrix.service | toLowerCase }}:latest .
         working-directory: ./microservices/${{ matrix.service }}
 
       - name: 🔑 Connexion à Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: 📤 Pousser l'image Docker pour ${{ matrix.service }}
-        run: docker push my-microservice-${{ matrix.service }}:latest
+        run: docker push my-microservice-${{ matrix.service | toLowerCase }}:latest
