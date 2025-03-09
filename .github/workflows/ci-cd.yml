@@ -31,6 +31,8 @@ jobs:
         run: |
           mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
           chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
+          mkdir -p microservices/${{ matrix.service }}/storage/framework/cache
+          chmod -R 775 microservices/${{ matrix.service }}/storage/framework/cache
 
       - name: 📦 Installation des dépendances Laravel
         run: |
