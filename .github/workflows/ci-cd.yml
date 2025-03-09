@@ -37,17 +37,23 @@ jobs:
           cd microservices/${{ matrix.service }}
           composer install --no-progress --no-interaction --prefer-dist
 
-      - name: 🔍 Exécution des tests unitaires
+      - name: 🔧 Préparer l'environnement pour ${{ matrix.service }}
+        run: |
+          cd microservices/${{ matrix.service }}
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: 🔍 Exécution des tests unitaires pour ${{ matrix.service }}
         run: |
           cd microservices/${{ matrix.service }}
           php artisan test
 
-      - name: 🐳 Construction de l'image Docker
+      - name: 🐳 Construction de l'image Docker pour ${{ matrix.service }}
         run: docker build -t my-microservice-${{ matrix.service }}:latest .
         working-directory: ./microservices/${{ matrix.service }}
 
       - name: 🔑 Connexion à Docker Hub
         run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-      - name: 📤 Pousser l'image Docker
+      - name: 📤 Pousser l'image Docker pour ${{ matrix.service }}
         run: docker push my-microservice-${{ matrix.service }}:latest
