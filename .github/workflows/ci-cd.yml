@@ -1,45 +1,48 @@
 name: CI/CD Laravel Microservices
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
 
 jobs:
-  build:
+  test-microservices:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [GClasses, GCours, GETemps, GEtudiants, GProfs]  # Liste de tes microservices
+        service: [GClasses, GCours, GETemps, GEtudiants, GProfs]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: 🛠️ Récupération du code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
+      - name: 📂 Se déplacer dans le microservice ${{ matrix.service }}
+        run: cd microservices/${{ matrix.service }}
 
-    - name: Install dependencies
-      run: |
-        cd microservices/${{ matrix.service }}
-        composer install --prefer-dist --no-progress --no-interaction
+      - name: 🐘 Installation de PHP et Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
 
-    - name: Prepare cache directory
-      run: |
-        mkdir -p microservices/${{ matrix.service }}/bootstrap/cache
-        chmod -R 775 microservices/${{ matrix.service }}/bootstrap/cache
+      - name: 📦 Installation des dépendances Laravel
+        run: |
+          cd microservices/${{ matrix.service }}
+          composer install --no-progress --no-interaction --prefer-dist
 
-    - name: Run Laravel tests
-      run: |
-        cd microservices/${{ matrix.service }}
-        php artisan test
+      - name: 🔍 Exécution des tests unitaires
+        run: |
+          cd microservices/${{ matrix.service }}
+          php artisan test
 
-    - name: Build Docker image
-      run: docker build -t my-microservice-${{ matrix.service }}:latest .
-      working-directory: ./microservices/${{ matrix.service }}
+      - name: 🐳 Construction de l'image Docker
+        run: docker build -t my-microservice-${{ matrix.service }}:latest .
+        working-directory: ./microservices/${{ matrix.service }}
 
-    - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+      - name: 🔑 Connexion à Docker Hub
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-    - name: Push Docker image
-      run: docker push my-microservice-${{ matrix.service }}:latest
-      working-directory: ./microservices/${{ matrix.service }}
+      - name: 📤 Pousser l'image Docker
+        run: docker push my-microservice-${{ matrix.service }}:latest
