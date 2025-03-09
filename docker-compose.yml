@@ -1,7 +1,7 @@
   services:
     gclasses:
       build:
-        context: ./microservices/GClasses
+        context: ./microservices/gclasses
         dockerfile: Dockerfile
       container_name: gclasses
       networks:
@@ -19,7 +19,7 @@
     
     gcours:
       build:
-        context: ./microservices/GCours
+        context: ./microservices/gcours
         dockerfile: Dockerfile
       container_name: gcours
       networks:
@@ -36,7 +36,7 @@
       platform: linux/amd64
     getemps:
       build:
-        context: ./microservices/GETemps
+        context: ./microservices/getemps
         dockerfile: Dockerfile
       container_name: getemps
       networks:
@@ -53,7 +53,7 @@
       platform: linux/amd64
     getudiants:
       build:
-        context: ./microservices/GEtudiants
+        context: ./microservices/getudiants
         dockerfile: Dockerfile
       container_name: getudiants
       networks:
@@ -70,7 +70,7 @@
       platform: linux/amd64
     gprofs:
       build:
-        context: ./microservices/GProfs
+        context: ./microservices/gprofs
         dockerfile: Dockerfile
       container_name: gprofs
       networks:
