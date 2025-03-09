@@ -1,0 +1,38 @@
+name: CI/CD Laravel Microservices
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  test-microservices:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [GClasses, GCours, GETemps, GEtudiants, GProfs]
+
+    steps:
+      - name: 🛠️ Récupération du code
+        uses: actions/checkout@v3
+
+      - name: 📂 Se déplacer dans le microservice ${{ matrix.service }}
+        run: cd microservices/${{ matrix.service }}
+
+      - name: 🐘 Installation de PHP et Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+
+      - name: 📦 Installation des dépendances Laravel
+        run: |
+          cd microservices/${{ matrix.service }}
+          composer install --no-progress --no-interaction --prefer-dist
+
+      - name: 🔍 Exécution des tests unitaires
+        run: |
+          cd microservices/${{ matrix.service }}
+          php artisan test
